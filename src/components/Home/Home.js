@@ -20,7 +20,9 @@ class Home extends React.Component {
   componentDidMount = () => {
     this.setState({ loading: true });
     const endpoint = `${API_URL}/movies/1`;
+    const randomMovieEndPoint = `${API_URL}/random/movie`;
     this.fetchItems(endpoint);
+    this.fetchRandom(randomMovieEndPoint);
   };
 
   // searchItems = searchTerm => {
@@ -59,7 +61,20 @@ class Home extends React.Component {
         result =>
           this.setState({
             movies: [...movies, ...result],
-            heroImage: heroImage || result[0],
+            loading: false,
+          })
+        // console.log(result)
+      );
+  };
+
+  fetchRandom = randomMovieEndPoint => {
+    const { heroImage } = this.state;
+    fetch(randomMovieEndPoint)
+      .then(result => result.json())
+      .then(
+        result =>
+          this.setState({
+            heroImage: result,
             loading: false,
           })
         // console.log(result)

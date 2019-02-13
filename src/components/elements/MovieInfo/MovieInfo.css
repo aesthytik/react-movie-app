@@ -46,6 +46,12 @@
   left: 360px;
 }
 
+@media only screen and (max-width: 600px) {
+  .rmdb-movieinfo-text {
+    left: 0px;
+  }
+}
+
 .rmdb-movieinfo-text h1 {
   font-family: 'Abel', sans-serif;
   font-size:48px;
