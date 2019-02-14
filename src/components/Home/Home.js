@@ -18,28 +18,33 @@ class Home extends React.Component {
   };
 
   componentDidMount = () => {
-    this.setState({ loading: true });
-    const endpoint = `${API_URL}/movies/1`;
-    const randomMovieEndPoint = `${API_URL}/random/movie`;
-    this.fetchItems(endpoint);
-    this.fetchRandom(randomMovieEndPoint);
+    if (localStorage.getItem('all-movies')) {
+      const state = JSON.parse(localStorage.getItem('all-movies'));
+      this.setState({ ...state });
+    } else {
+      this.setState({ loading: true });
+      const endpoint = `${API_URL}/movies/1`;
+      const randomMovieEndPoint = `${API_URL}/random/movie`;
+      this.fetchItems(endpoint);
+      this.fetchRandom(randomMovieEndPoint);
+    }
   };
 
-  // searchItems = searchTerm => {
-  //   let endpoint = '';
-  //   this.setState({
-  //     movies: [],
-  //     loading: true,
-  //     searchTerm,
-  //   });
+  searchItems = searchTerm => {
+    let endpoint = '';
+    this.setState({
+      movies: [],
+      loading: true,
+      searchTerm,
+    });
 
-  //   if (searchTerm === '') {
-  //     endpoint = `${API_URL}movie/popular?api_key=${API_KEY}&language=en-US&page=1`;
-  //   } else {
-  //     endpoint = `${API_URL}search/movie?api_key=${API_KEY}&language=en-US&query=${searchTerm}`;
-  //   }
-  //   this.fetchItems(endpoint);
-  // };
+    if (searchTerm === '') {
+      endpoint = `${API_URL}/movies/1`;
+    } else {
+      // endpoint = `${API_URL}search/movie?api_key=${API_KEY}&language=en-US&query=${searchTerm}`;
+    }
+    this.fetchItems(endpoint);
+  };
 
   loadMoreItems = () => {
     // ES6 Destructuring the state
@@ -59,10 +64,15 @@ class Home extends React.Component {
       .then(result => result.json())
       .then(
         result =>
-          this.setState({
-            movies: [...movies, ...result],
-            loading: false,
-          })
+          this.setState(
+            {
+              movies: [...movies, ...result],
+              loading: false,
+            },
+            () => {
+              localStorage.setItem('all-movies', JSON.stringify(this.state));
+            }
+          )
         // console.log(result)
       );
   };
