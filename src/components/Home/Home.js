@@ -24,26 +24,8 @@ class Home extends React.Component {
     } else {
       this.setState({ loading: true });
       const endpoint = `${API_URL}/movies/1`;
-      const randomMovieEndPoint = `${API_URL}/random/movie`;
       this.fetchItems(endpoint);
-      this.fetchRandom(randomMovieEndPoint);
     }
-  };
-
-  searchItems = searchTerm => {
-    let endpoint = '';
-    this.setState({
-      movies: [],
-      loading: true,
-      searchTerm,
-    });
-
-    if (searchTerm === '') {
-      endpoint = `${API_URL}/movies/1`;
-    } else {
-      // endpoint = `${API_URL}search/movie?api_key=${API_KEY}&language=en-US&query=${searchTerm}`;
-    }
-    this.fetchItems(endpoint);
   };
 
   loadMoreItems = () => {
@@ -67,26 +49,13 @@ class Home extends React.Component {
           this.setState(
             {
               movies: [...movies, ...result],
+              heroImage: result[0],
               loading: false,
             },
             () => {
               localStorage.setItem('all-movies', JSON.stringify(this.state));
             }
           )
-        // console.log(result)
-      );
-  };
-
-  fetchRandom = randomMovieEndPoint => {
-    const { heroImage } = this.state;
-    fetch(randomMovieEndPoint)
-      .then(result => result.json())
-      .then(
-        result =>
-          this.setState({
-            heroImage: result,
-            loading: false,
-          })
         // console.log(result)
       );
   };
